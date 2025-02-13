@@ -43,6 +43,7 @@ const TopSellers = () => {
                 slidesPerView={1}
                 spaceBetween={30}
                 navigation={true}
+                
                 breakpoints={{
                     640: {
                         slidesPerView: 1,
