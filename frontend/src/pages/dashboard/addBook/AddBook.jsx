@@ -25,7 +25,7 @@ const AddBook = () => {
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, It's Okay!"
+                confirmButtonText: "Yes, It's Okay!",
               });
               reset();
               setimageFileName('')

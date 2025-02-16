@@ -6,16 +6,14 @@ import { getAuth } from "firebase/auth"
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCgDGHSApowEjPhZeQDCahDocMUCwp6lU4",
-  authDomain: "mean-auth-cb617.firebaseapp.com",
-  databaseURL: "https://mean-auth-cb617-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "mean-auth-cb617",
-  storageBucket: "mean-auth-cb617.appspot.com",
-  messagingSenderId: "12461046933",
-  appId: "1:12461046933:web:9823beea10fd5141d5af9c",
-  measurementId: "G-XKTMSN53WV"
+  apiKey: "AIzaSyBB5Ku7KnDeGfv1UQFepIeQ00V4r7_mbXQ",
+  authDomain: "book-store-7d02b.firebaseapp.com",
+  projectId: "book-store-7d02b",
+  storageBucket: "book-store-7d02b.firebasestorage.app",
+  messagingSenderId: "267141259449",
+  appId: "1:267141259449:web:8cdb1a0158334c8c2f7b68",
+  measurementId: "G-BZKGWMLXK2"
 };
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth =  getAuth(app);
