@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { HiMiniBars3CenterLeft, HiOutlineHeart, HiOutlineShoppingCart } from "react-icons/hi2";
+import { HiOutlineHeart, HiOutlineShoppingCart } from "react-icons/hi2";
 import { IoSearchOutline } from "react-icons/io5";
 import { HiOutlineUser } from "react-icons/hi";
+//import logo from '../assets/logo.png';
 
 import avatarImg from "../assets/avatar.png"
 import { useState } from "react";
@@ -34,7 +35,8 @@ const Navbar = () => {
                 {/* left side */}
                 <div className="flex items-center md:gap-16 gap-4">
                     <Link to="/">
-                        <HiMiniBars3CenterLeft className="size-6" />
+                        {/* <HiMiniBars3CenterLeft className="size-6" />  */}
+                        <img src="/fav-icon.png" alt="" />
                     </Link>
 
                     {/* search input */}
