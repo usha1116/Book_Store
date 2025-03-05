@@ -17,7 +17,9 @@ import AddBook from "../pages/dashboard/addBook/AddBook";
 import UpdateBook from "../pages/dashboard/EditBook/UpdateBook";
 import UserDashboard from "../pages/dashboard/users/UserDashboard";
 //import Footer from "../components/Footer";
-
+import SearchResults from "../components/SearchResults"; 
+import Contact from "../pages/home/Contact";
+import About from "../pages/home/About";
 const router = createBrowserRouter([
     {
       path: "/",
@@ -33,7 +35,7 @@ const router = createBrowserRouter([
         },
         {
             path: "/about",
-            element: <div>About</div>
+            element: <About/>
         },
         {
           path: "/login",
@@ -58,7 +60,15 @@ const router = createBrowserRouter([
         {
           path: "/user-dashboard",
           element: <PrivateRoute><UserDashboard/></PrivateRoute>
-        }
+        },
+        {
+          path: "/search/:searchTerm?",
+          element: <SearchResults />,
+      },
+      {
+        path:"/contact",
+        element:<Contact/>,
+      }
 
         
       ]

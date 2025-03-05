@@ -22,10 +22,11 @@ const booksApi = createApi({
             query: () => "/",
             providesTags: ["Books"]
         }),
-        fetchBookById: builder.query({
-            query: (id) => `/${id}`,
-            providesTags: (result, error, id) => [{ type: "Books", id }],
-        }),
+        fetchAllBooks: builder.query({
+            query: (searchTerm = "") => `/?search=${searchTerm}`,
+            providesTags: ["Books"]
+        }),        
+        
         addBook: builder.mutation({
             query: (newBook) => ({
                 url: `/create-book`,
