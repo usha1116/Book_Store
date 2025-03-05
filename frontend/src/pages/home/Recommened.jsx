@@ -10,7 +10,7 @@ import { useFetchAllBooksQuery } from '../../redux/features/books/booksApi';
 const Recommened = () => {
     const { data: books = [], isLoading, error } = useFetchAllBooksQuery();
 
-    console.log("Fetched Books:", books); // Debugging check
+    console.log("Fetched Books:", books); 
 
     if (isLoading) return <p>Loading recommended books...</p>;
     if (error) return <p>Error loading books!</p>;
