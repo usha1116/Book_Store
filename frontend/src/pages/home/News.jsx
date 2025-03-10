@@ -1,101 +1,129 @@
-import React from 'react'
-import { Swiper, SwiperSlide } from 'swiper/react';
-
-// Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
-import { Pagination, Navigation } from 'swiper/modules';
-
-import news1 from "../../assets/news/news-1.png"
-import news2 from "../../assets/news/news-2.png"
-import news3 from "../../assets/news/news-3.png"
-import news4 from "../../assets/news/news-4.png"
-import { Link } from 'react-router-dom';
-
-const news = [
-    {
-        "id": 1,
-        "title": "Global Climate Summit Calls for Urgent Action",
-        "description": "World leaders gather at the Global Climate Summit to discuss urgent strategies to combat climate change, focusing on reducing carbon emissions and fostering renewable energy solutions.",
-        "image": news1
-    },
-    {
-        "id": 2,
-        "title": "Breakthrough in AI Technology Announced",
-        "description": "A major breakthrough in artificial intelligence has been announced by researchers, with new advancements promising to revolutionize industries from healthcare to finance.",
-        "image": news2
-    },
-    {
-        "id": 3,
-        "title": "New Space Mission Aims to Explore Distant Galaxies",
-        "description": "NASA has unveiled plans for a new space mission that will aim to explore distant galaxies, with hopes of uncovering insights into the origins of the universe.",
-        "image": news3
-    },
-    {
-        "id": 4,
-        "title": "Stock Markets Reach Record Highs Amid Economic Recovery",
-        "description": "Global stock markets have reached record highs as signs of economic recovery continue to emerge following the challenges posed by the global pandemic.",
-        "image": news4
-    },
-    {
-        "id": 5,
-        "title": "Innovative New Smartphone Released by Leading Tech Company",
-        "description": "A leading tech company has released its latest smartphone model, featuring cutting-edge technology, improved battery life, and a sleek new design.",
-        "image": news2
-    }
-]
+import React, { useEffect, useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import { Pagination, Navigation } from "swiper/modules";
+import { Link } from "react-router-dom";
 
 const News = () => {
-  return (
-    <div className='py-16'>
-        <h2 className='text-3xl font-semibold mb-6'>News </h2>
+  const [news, setNews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const placeholderImage = "https://via.placeholder.com/300?text=No+Image";
 
-        <Swiper
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        // Fetch NYT Book Reviews
+        const NYT_API_KEY = "I30cBwzfldCeheuNkTytLXM2Xca7dSKz";
+        const NYT_URL = `https://api.nytimes.com/svc/books/v3/reviews.json?author=Stephen+King&api-key=${NYT_API_KEY}`;
+
+        const response = await fetch(NYT_URL);
+        const data = await response.json();
+        console.log(data)
+
+        if (!data.results) {
+          console.log("No book reviews found!");
+          setLoading(false);
+          return;
+        }
+
+        let uniqueImages = new Set();
+
+        const booksWithImages = await Promise.all(
+          data.results.map(async (book) => {
+            try {
+              const googleBooksUrl = `https://www.googleapis.com/books/v1/volumes?q=intitle:${encodeURIComponent(
+                book.book_title
+              )}`;
+              const googleResponse = await fetch(googleBooksUrl);
+              const googleData = await googleResponse.json();
+
+              let image = placeholderImage; // Default placeholder
+
+              if (
+                googleData.items &&
+                googleData.items[0]?.volumeInfo?.imageLinks?.thumbnail
+              ) {
+                const foundImage = googleData.items[0].volumeInfo.imageLinks.thumbnail;
+
+                // 🔹 Ensure uniqueness (check if image URL is already used)
+                if (!uniqueImages.has(foundImage)) {
+                  image = foundImage;
+                  uniqueImages.add(foundImage); // Add to Set
+                }
+              }
+
+              return { ...book, image };
+            } catch (error) {
+              console.error("Error fetching Google Books API:", error);
+              return { ...book, image: placeholderImage };
+            }
+          })
+        );
+
+        setNews(booksWithImages);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching NYT API:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchNews();
+  }, []);
+
+  if (loading) return <p className="text-center py-8">Loading news...</p>;
+
+  return (
+    <div className="py-16">
+      <h2 className="text-3xl font-semibold mb-6">Book News</h2>
+
+      <Swiper
         slidesPerView={1}
         spaceBetween={30}
         navigation={true}
         breakpoints={{
-          640: {
-            slidesPerView: 1,
-            spaceBetween: 20,
-          },
-          768: {
-            slidesPerView: 2,
-            spaceBetween: 40,
-          },
-          1024: {
-            slidesPerView: 2,
-            spaceBetween: 50,
-          },
+          640: { slidesPerView: 2, spaceBetween: 20 },
+          768: { slidesPerView: 2, spaceBetween: 40 },
+          1024: { slidesPerView: 2, spaceBetween: 50 },
         }}
         modules={[Pagination, Navigation]}
         className="mySwiper"
       >
-        
-        {
-            news.map((item, index) => (
-                <SwiperSlide key={index}>
-                    <div className='flex flex-col sm:flex-row sm:justify-between items-center gap-12'>
-                        {/* content */}
-                        <div className='py-4'>
-                            <Link to="/">
-                                 <h3 className='text-lg font-medium hover:text-blue-500 mb-4'>{item.title}</h3>
-                            </Link>
-                            <div className='w-12 h-[4px] bg-primary mb-5'></div>
-                            <p className='text-sm text-gray-600'>{item.description}</p>
-                        </div>
+        {news?.map((item, index) => (
+          <SwiperSlide key={index}>
+            <div className="flex flex-col sm:flex-row sm:justify-between items-center gap-12">
+              {/* Content */}
+              <div className="py-4">
+                <Link to={item.url || "/"}>
+                  <h3 className="text-lg font-medium hover:text-blue-500 mb-4">
+                    {item.book_title}
+                  </h3>
+                </Link>
+                <div className="w-12 h-[4px] bg-primary mb-5"></div>
+                <p className="text-sm text-gray-600">{item.summary}</p>
+              </div>
 
-                        <div className='flex-shrink-0'>
-                            <img src={item.image} alt=""  className='w-full object-cover'/>
-                        </div>
-                    </div>
-                </SwiperSlide>
-            ) )
-        }
+              {/* Image */}
+              <div className="flex-shrink-0">
+                <img
+                  src={item.image}
+                  alt={item.book_title}
+                  className="w-full object-cover"
+                  onError={(e) => {
+                    if (e.target.src !== placeholderImage) {
+                      e.target.src = placeholderImage;
+                    }
+                  }} // Ensures fallback happens only once
+                />
+              </div>
+            </div>
+          </SwiperSlide>
+        ))}
       </Swiper>
     </div>
-  )
-}
+  );
+};
 
-export default News
+export default News;
